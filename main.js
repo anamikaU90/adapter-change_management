@@ -66,6 +66,7 @@ function constructUri(serviceNowTable, query = null) {
  * @return {boolean} Returns true if instance is hibernating. Otherwise returns false.
  */
 function isHibernating(response) {
+   
   return response.body.includes('Instance Hibernating page')
   && response.body.includes('<html>')
   && response.statusCode === 200;
@@ -95,6 +96,12 @@ function processRequestResults(error, response, body, callback) {
    * This function must not check for a hibernating instance;
    * it must call function isHibernating.
    */
+   if(error) console.log(error)
+   if (isHibernating(response))  
+       console.log('Instance is Hibernating....')
+callback(response)
+  
+  
 }
 
 
@@ -126,7 +133,15 @@ function sendRequest(callOptions, callback) {
    * from the previous lab. There should be no
    * hardcoded values.
    */
-  const requestOptions = {};
+  const requestOptions = {
+      method: callOptions.method,
+    auth: {
+      user: options.username,
+      pass: options.password,
+    },
+    baseUrl: options.url,
+    uri: uri,
+  };
   request(requestOptions, (error, response, body) => {
     processRequestResults(error, response, body, (processedResults, processedError) => callback(processedResults, processedError));
   });
@@ -185,7 +200,7 @@ function main() {
     if (error) {
       console.error(`\nError returned from POST request:\n${JSON.stringify(error)}`);
     }
-    console.log(`\nResponse returned from POST request:\n${JSON.stringify(data)}`)
+     console.log(`\nResponse returned from POST request:\n${JSON.stringify(data)}`)
   });
 }
 
