@@ -218,7 +218,7 @@ if (error) {
 
      }
     
-    console.log(`\nResponse returned from GET request:\n${JSON.stringify(b)}`)
+    log.info(`\nResponse returned from GET request:\n${JSON.stringify(b)}`)
   
   });
  
@@ -256,7 +256,7 @@ if (error) {
 'work_end',
 'sys_id'])).rename('number','change_ticket_number').rename('sys_id','change_ticket_key');
         }
-    console.log(`\nResponse returned from GET request:\n${JSON.stringify(data)}`)
+    log.info(`\nResponse returned from GET request:\n${JSON.stringify(data)}`)
   });
   }
 }

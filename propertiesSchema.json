@@ -22,9 +22,9 @@
         },
         "password": {
           "type": "string",
-          "default": "Anamika@123",
+          "default": "$ENCa2e486274d7ef065db89040dc89c261b8a80268aabd0469c560f88",
           "examples": [
-            "Anamika@123"
+            "$ENCa2e486274d7ef065db89040dc89c261b8a80268aabd0469c560f88"
           ]
         }
       },
