@@ -127,7 +127,7 @@ healthcheck(callback) {
       * parameter as an argument for the callback function's
       * responseData parameter.
       */
-      EventEmitter.emit(this.emitOffline)
+      EventEmitter.emit(this.emitOnline)
    }
  });
 }
