@@ -159,7 +159,7 @@ class ServiceNowAdapter extends EventEmitter {
       pass: this.connection.password,
     },
     baseUrl: this.connection.url,
-    uri: `/api/now/table/${this.connection.serviceNowTable}?sysparm_limit=1`;,
+    uri: `/api/now/table/${this.connection.serviceNowTable}?sysparm_limit=1`
   };
      request(requestOptions, callback);
  
@@ -189,7 +189,7 @@ class ServiceNowAdapter extends EventEmitter {
       pass: this.connection.password,
     },
     baseUrl: this.connection.url,
-    uri: `/api/now/table/${this.connection.serviceNowTable}`;,
+    uri: `/api/now/table/${this.connection.serviceNowTable}`
   };
      request(requestOptions, callback);
   }
