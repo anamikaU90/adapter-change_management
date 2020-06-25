@@ -80,7 +80,7 @@ class ServiceNowAdapter extends EventEmitter {
   connect() {
     // As a best practice, Itential recommends isolating the health check action
     // in its own method.
-    this.healthcheck();
+    this.healthcheck((result)=>{console.log("Online"+result)});
   }
 
   /**
@@ -115,7 +115,7 @@ healthcheck(callback) {
       * for the callback's errorMessage parameter.
 
       */
-      EventEmitter.emit(this.emitOffline)
+     this.emitOffline();
    } else {
      /**
       * Write this block.
@@ -127,7 +127,8 @@ healthcheck(callback) {
       * parameter as an argument for the callback function's
       * responseData parameter.
       */
-      EventEmitter.emit(this.emitOnline)
+      this.emitOnline();
+      callback(result);
    }
  });
 }
