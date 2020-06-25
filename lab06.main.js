@@ -1,6 +1,5 @@
 // Import built-in Node.js package path.
 const path = require('path');
-const _ = require("lodash")
 
 /**
  * Import the ServiceNowConnector class from local Node.js module connector.js
@@ -146,16 +145,6 @@ healthcheck(callback) {
     log.warn('ServiceNow: Instance is unavailable.');
   }
 
-rename = function(obj, key, newKey) {
-  
-  if(_.includes(_.keys(obj), key)) {
-    obj[newKey] = _.clone(obj[key], true);
-
-    delete obj[key];
-  }
-  
-  return obj;
-};
   /**
    * @memberof ServiceNowAdapter
    * @method emitOnline
@@ -197,30 +186,16 @@ rename = function(obj, key, newKey) {
      * Note how the object was instantiated in the constructor().
      * get() takes a callback function.
      */
-this.connector.get((data,error)=>
-  {
-if (error) {
-      console.error(`\nError returned from GET request:\n${JSON.stringify(error)}`);
-    }
-    var res;
-    for(let b in data)
-    {
-        if (b.hasOwnProperty('body'))
-        {
-           _.map(b,'body')._.map(results, _.partialRight(_.pick, ['number',
-'active',
-'priority',
-'description',
-'work_start',
-'work_end',
-'sys_id'])).rename('number','change_ticket_number').rename('sys_id','change_ticket_key');
-        }
-
-     }
-    
-    console.log(`\nResponse returned from GET request:\n${JSON.stringify(b)}`)
-  
-  });
+     const requestOptions = {
+      method:'GET',
+    auth: {
+      user: this.connection.username,
+      pass: this.connection.password,
+    },
+    baseUrl: this.connection.url,
+    uri: `/api/now/table/${this.connection.serviceNowTable}?sysparm_limit=1`
+  };
+     request(requestOptions, callback);
  
   }
 
@@ -241,23 +216,16 @@ if (error) {
      * post() takes a callback function.
      */
 
-     connector.post((data,error)=>
-  {
-if (error) {
-      console.error(`\nError returned from GET request:\n${JSON.stringify(error)}`);
-    }
-     if (data.hasOwnProperty('body'))
-        {
-           _.map(data,'body')._.map(results, _.partialRight(_.pick, ['number',
-'active',
-'priority',
-'description',
-'work_start',
-'work_end',
-'sys_id'])).rename('number','change_ticket_number').rename('sys_id','change_ticket_key');
-        }
-    console.log(`\nResponse returned from GET request:\n${JSON.stringify(data)}`)
-  });
+     const requestOptions = {
+      method:'POST',
+    auth: {
+      user: this.connection.username,
+      pass: this.connection.password,
+    },
+    baseUrl: this.connection.url,
+    uri: `/api/now/table/${this.connection.serviceNowTable}`
+  };
+     request(requestOptions, callback);
   }
 }
 
