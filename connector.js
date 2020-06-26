@@ -53,7 +53,8 @@ class ServiceNowConnector {
  * @return {string} ServiceNow URL
  */
  constructUri(serviceNowTable, query = null) {
-  let uri = `/api/now/table/${this.serviceNowTable}`;
+      log.info('uri....'+serviceNowTable)
+  let uri = `/api/now/table/${serviceNowTable}`;
   if (query) {
     uri = uri + '?' + query;
   }
@@ -125,6 +126,7 @@ callback(response)
  sendRequest(callOptions, callback) {
   // Initialize return arguments for callback
   let uri;
+ 
   if (callOptions.query)
     uri = this.constructUri(callOptions.serviceNowTable, callOptions.query);
   else

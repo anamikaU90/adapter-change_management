@@ -81,6 +81,7 @@ class ServiceNowAdapter extends EventEmitter {
   connect() {
     // As a best practice, Itential recommends isolating the health check action
     // in its own method.
+    log.info('connect');
     this.healthcheck((result)=>{console.log("Online"+result)});
   }
 
@@ -129,7 +130,7 @@ healthcheck(callback) {
       * parameter as an argument for the callback function's
       * responseData parameter.
       */
-      log.info('online')
+     
       this.emitOnline();
       callback(result);
    }
@@ -146,18 +147,13 @@ healthcheck(callback) {
   emitOffline() {
     this.emitStatus('OFFLINE');
     log.warn('ServiceNow: Instance is unavailable.');
+  };
+
+  replaceKeyInObjectArray(a, r){ a.map(o => 
+    Object.keys(o).map((key) => ({ [r[key] || key] : o[key] })
+).reduce((a, b) => Object.assign({}, a, b)))
   }
 
-rename = function(obj, key, newKey) {
-  
-  if(_.includes(_.keys(obj), key)) {
-    obj[newKey] = _.clone(obj[key], true);
-
-    delete obj[key];
-  }
-  
-  return obj;
-};
   /**
    * @memberof ServiceNowAdapter
    * @method emitOnline
@@ -204,23 +200,19 @@ this.connector.get((data,error)=>
 if (error) {
       console.error(`\nError returned from GET request:\n${JSON.stringify(error)}`);
     }
-    var res;
-    for(let b in data)
-    {
-        if (b.hasOwnProperty('body'))
-        {
-           _.map(b,'body')._.map(results, _.partialRight(_.pick, ['number',
-'active',
-'priority',
-'description',
-'work_start',
-'work_end',
-'sys_id'])).rename('number','change_ticket_number').rename('sys_id','change_ticket_key');
-        }
-
-     }
+     
+   
     
-    log.info(`\nResponse returned from GET request:\n${JSON.stringify(b)}`)
+        if (data.hasOwnProperty('body'))
+        {
+            let results = JSON.parse(_.get(data, 'body')).result; 
+            var mapped = _.map(results, _.partialRight(_.pick, ['number', 'active', 'priority', 'description', 'work_start']));
+           const replaceMap = { "number": "change_ticket_number"}
+
+           this.replaceKeyInObjectArray(mapped, replaceMap)
+            log.info('Response returned from GET request'+JSON.stringify(mapped))
+         
+        }
   
   });
  
@@ -246,21 +238,21 @@ if (error) {
      connector.post((data,error)=>
   {
 if (error) {
-      console.error(`\nError returned from GET request:\n${JSON.stringify(error)}`);
+      console.error(`\nError returned from Post  request:\n${JSON.stringify(error)}`);
     }
-     if (data.hasOwnProperty('body'))
+   if (data.hasOwnProperty('body'))
         {
-           _.map(data,'body')._.map(results, _.partialRight(_.pick, ['number',
-'active',
-'priority',
-'description',
-'work_start',
-'work_end',
-'sys_id'])).rename('number','change_ticket_number').rename('sys_id','change_ticket_key');
+            let results = JSON.parse(_.get(data, 'body')).result; 
+            var mapped = _.map(results, _.partialRight(_.pick, ['number', 'active', 'priority', 'description', 'work_start']));
+           const replaceMap = { "number": "change_ticket_number"}
+
+           this.replaceKeyInObjectArray(mapped, replaceMap)
+            log.info('Response From Post Request'+JSON.stringify(mapped))
+         
         }
-    log.info(`\nResponse returned from GET request:\n${JSON.stringify(data)}`)
   });
   }
 }
+
 
 module.exports = ServiceNowAdapter;
