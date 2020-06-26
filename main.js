@@ -116,6 +116,7 @@ healthcheck(callback) {
       * for the callback's errorMessage parameter.
 
       */
+      log.info('offline')
      this.emitOffline();
    } else {
      /**
@@ -128,6 +129,7 @@ healthcheck(callback) {
       * parameter as an argument for the callback function's
       * responseData parameter.
       */
+      log.info('online')
       this.emitOnline();
       callback(result);
    }
